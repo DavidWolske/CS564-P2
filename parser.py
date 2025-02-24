@@ -43,6 +43,15 @@ Returns true if a file ends in .json
 def isJson(f):
     return len(f) > 5 and f[-5:] == '.json'
 
+
+def replace_quotes(file_path):
+    with open(file_path, "r", encoding="utf-8") as file:
+        content = file.read().replace('\"', '\"\"')
+
+    with open(file_path, "w", encoding="utf-8") as file:
+        file.write(content)
+
+
 """
 Converts month to a number, e.g. 'Dec' to '12'
 """
@@ -135,10 +144,6 @@ def parseJson(json_file):
                         if "IsSeller" not in users_dict[bidder["UserID"]]:
                             users_dict[bidder["UserID"]]["IsSeller"] = "False"
                     
-
-
-
-
 """
 Loops through each json files provided on the command line and passes each file
 to the parser
@@ -157,6 +162,10 @@ def main(argv):
             user_info = str(users_dict[user]["UserID"]) + columnSeparator + str(users_dict[user]["Rating"]) + columnSeparator + str(users_dict[user]["Location"])+ columnSeparator + str(users_dict[user]["Country"]) + columnSeparator + users_dict[user]["IsSeller"] + columnSeparator + users_dict[user]["IsBidder"] + "\n"
             print(user_info)
             users_file.write(user_info)
+    replace_quotes("items.dat")
+    replace_quotes("bids.dat")
+    replace_quotes("ItemCategory.dat")
+    replace_quotes("users.dat")
 
 if __name__ == '__main__':
     main(sys.argv)
